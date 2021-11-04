@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev",
+			"problemMatcher": [],
+			"label": "npm: dev",
+			"detail": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"npx ts-node src/app.ts\""
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "tsc -p ."
+		}
+	]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "precos-medicamentos-scraping-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/app.js",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"npx ts-node src/app.ts\"",
+    "scrap": "tsc && node dist/scrap-html.js",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Comrade-Software-Ltda/precos-medicamentos-scraping-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Comrade-Software-Ltda/precos-medicamentos-scraping-api/issues"
+  },
+  "homepage": "https://github.com/Comrade-Software-Ltda/precos-medicamentos-scraping-api#readme",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.30",
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.6",
+    "nodemon": "^2.0.14",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "express": "^4.17.1"
+  }
+}
