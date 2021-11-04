@@ -1,10 +1,10 @@
-import fs, { createWriteStream } from 'fs'
+import fs from 'fs'
 import path from 'path'
 import cheerio from 'cheerio';
-import axios from 'axios';
-import { response } from 'express';
+import axios, { AxiosResponse } from 'axios';
 import { promisify } from 'util';
 import { Stream } from 'stream';
+import Archiver from 'archiver';
 
 interface Response{
     pdf : string | undefined;
@@ -19,10 +19,7 @@ const $ = cheerio.load(css);
 
 const statsTable = $('div.journal-content-article > p'); // Parse the HTML and extract just whatever code contains .statsTableContainer and has tr inside
 
-const writer = createWriteStream("./downloads/");
-const finished = promisify(Stream.finished);
-
-
+const archive = Archiver('zip');
 var elements = statsTable.find('span:contains(maio/18)');
 
 
@@ -59,16 +56,29 @@ elements.each( (index, element) => {
     precosMedicamentos.push({
         pdf,
         xls
-    })
+    })    
 });
 
-precosMedicamentos.forEach(e => {
-    AxiosInstance.request({method: 'GET', url:e.pdf, responseType: 'stream'})
-    .then(response =>{
-        var pdfWriter = fs.createWriteStream("my.pdf")
-        response.data.pipe(pdfWriter);      
-        return finished(pdfWriter);
-    })
-})
+archive.pipe(fs.createWriteStream("teste.zip"));
 
+const promises: Promise<void | AxiosResponse>[] = [];
+precosMedicamentos.forEach(e => {
+    promises.push(
+        AxiosInstance.request({method: 'GET', url:e.pdf, responseType: 'stream'})
+        .then(response =>{
+            var name = e.pdf?.split("/").pop() + ".pdf"
+            archive.append(response.data, {name: name});
+        })
+    )
+    promises.push(        
+        AxiosInstance.request({method: 'GET', url:e.xls, responseType: 'stream'})
+        .then(response =>{
+            var name = e.xls?.split("/").pop() + ".xls"
+            archive.append(response.data, {name: name});
+        })
+    )
+})
+Promise.all(promises).then(()=>{
+    archive.finalize();
+})
 console.log("fim");
