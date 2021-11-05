@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node dist/app.js",
-    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"npx ts-node src/app.ts\"",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"npx ts-node src/server.ts\"",
     "scrap": "tsc && node dist/scrap-html.js",
     "build": "tsc -p ."
   },
@@ -34,7 +34,9 @@
   },
   "dependencies": {
     "archiver": "^5.3.0",
+    "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.10",
+    "consign": "^0.1.6",
     "cors": "^2.8.5",
     "express": "^4.17.1"
   }
