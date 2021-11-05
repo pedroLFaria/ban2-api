@@ -1,6 +1,7 @@
 import archiver from "archiver";
 import axios, { AxiosResponse } from "axios";
 import { Router, Request, Response, NextFunction } from "express";
+import { Stream } from "stream";
 import { HttpException } from "../exceptions/HttpExceptions";
 import requestToPrecosMedicamentosRequestDto from "../mappers/PrecosMedicamentosRequestMapper";
 import scrapUrlDePrecosMedicamentos from "../scrapers/PrecosMedicamentosScraper";
@@ -31,27 +32,32 @@ router.get(
       );
 
       const archive = archiver("zip");
+
+      const filename = `Precos_Medicamentos_${reqDto.mes}-${reqDto.ano}.zip`
+      
       res.setHeader("Content-Type", "application/zip");
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=Precos_Medicamentos_${reqDto.mes}-${reqDto.ano}.zip`
+        "attachment; filename=" + filename
       );
 
       const promises: Promise<void | AxiosResponse>[] = [];
+      
       console.log("Upload Iniciado!")
-      archive.pipe(res);
 
-      documentsToDownload.forEach((e) => {
+      documentsToDownload.forEach((e, i) => {
         promises.push(
           documentDownloader(AxiosInstance, e.url).then((response) => {
-            var name = e.url?.split("/").pop() + "." + e.type;
+            var name = e.url?.split("/").pop() + "." + e.type;            
             archive.append(response.data, { name: name });
-          })
+          }).then(()=> console.log(i + " download finalizado;"))
         );
-      });
+      });      
 
       Promise.all(promises).then(() => {
-        archive.finalize().then(() => console.log("Upload finalizado!"));
+        archive.pipe(res);
+        archive.finalize();
+        res.attachment(filename);
       });
 
     } catch (e) {
