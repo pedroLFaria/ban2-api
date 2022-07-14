@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import curtidaRepository from "../repository/curtidaRepository";
+import curtidaRepository from "../repository/CurtidaRepository";
 import curtidaDto from "../models/CurtidaDto";
 
 class CurtidaController {
@@ -11,13 +11,13 @@ class CurtidaController {
   }
 
   public async getMatches(req: Request, res: Response) {    
-    const userId = req.params.id as number;
+    const userId = parseInt(req.params.id);
     const curtidas = curtidaRepository.getMatches(userId);
     res.send({ data: curtidas }).status(200);
   }
 
   public async delete(req: Request, res: Response) {
-      const userId = req.params.id as number;
+      const userId = parseInt(req.params.id);
       curtidaRepository.delete(userId);
       res.send().status(200);
   }

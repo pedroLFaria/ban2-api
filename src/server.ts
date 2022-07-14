@@ -6,6 +6,10 @@ import cors from 'cors';
 import { Foto } from './routes/FotoRoutes';
 import { Preferencia } from './routes/PreferenciaRoutes';
 import { Curtida } from './routes/CurtidaRoutes';
+import firebase, { firestore } from 'firebase-admin';
+import { Firestore, getFirestore } from 'firebase-admin/firestore'
+import serviceAccount from './firebase/firebase-service-account';
+
 class Server {
     private app;
 
@@ -14,6 +18,8 @@ class Server {
         this.config();
         this.routerConfig();
         this.dbConnect();
+        this.fbConnect();
+        this.scriptInicial();
     }
 
     private config() {
@@ -34,6 +40,19 @@ class Server {
         this.app.use('/foto', Foto);
         this.app.use('/preferencia', Preferencia);
         this.app.use('/curtida', Curtida);
+    }
+
+    private fbConnect() {
+        firebase.initializeApp({
+            credential: firebase.credential.cert(serviceAccount)
+        });
+    }
+
+    private scriptInicial(){
+        const db = firestore().collection('foo').doc('bas').set({
+            name: 'ada',
+            email: 'fdsa'
+        })
     }
 
     public start = (port: number) => {

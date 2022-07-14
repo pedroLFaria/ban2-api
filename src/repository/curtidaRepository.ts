@@ -1,24 +1,22 @@
 import pool from "../db/dbconnector";
+import CurtidaEntity from "../entitys/curtidaEntity";
 import curtidaDto from "../models/CurtidaDto";
-import curtidaEntity from "../models/curtidaEntity";
+import BaseRepository from "./BaseRepository";
 
-export default class curtidaRepository {
+
+export default class curtidaRepository extends BaseRepository {
 
     public static async insert(dto: curtidaDto) {
-        const dbClient = await pool.connect();
         const sql = `INSERT INTO public.curtida(
             "usuarioId", "usuarioAlvoId", "isCurtida", "curtidaData")
-            VALUES (${dto.usuarioId}, ${dto.usuarioAlvoId}, ${dto.isCurtida}, now()) 
+            VALUES (${dto.id}, ${dto.alvoId}, ${dto.isCurtida}, now()) 
             ON CONFLICT ("usuarioId", "usuarioAlvoId") DO UPDATE
             SET "isCurtida"=${dto.isCurtida},
             "curtidaData"= now();`;
-            
-        await dbClient.query(sql);        
-        dbClient.release();
+        this.edit(sql);
     }
 
     public static async getMatches(userId: number) {
-        const dbClient = await pool.connect();
         const sql = `SELECT  u."usuarioNome",
             u."usuarioId"
         FROM public.curtida ca
@@ -27,17 +25,18 @@ export default class curtidaRepository {
             SELECT c."usuarioAlvoId"
                 FROM public.curtida c
                 where c."usuarioId" = ${userId} and c."isCurtida"=true);`;
-        const { rows } = await dbClient.query(sql);
-        dbClient.release();
-        const todos: curtidaEntity[] = rows;
-        return todos;
+        return this.fetch<CurtidaEntity[]>(sql);
+    }
+
+    public static async getAll(){
+        const sql =  `SELECT * 
+                        FROM public.curtida;`
+        return this.fetch<CurtidaEntity[]>(sql);
     }
 
     public static async delete(userId: number){
-        const dbClient = await pool.connect();
-      const sql = ` DELETE FROM public.curtida
-      WHERE "usuarioId" = ${userId};`;
-      await dbClient.query(sql);
-      dbClient.release();
+        const sql = ` DELETE FROM public.curtida
+            WHERE "usuarioId" = ${userId};`;
+        this.edit(sql);
     }
 }

@@ -1,20 +1,13 @@
 import pool from "../db/dbconnector";
 import { Request, Response } from "express";
+import FotoRepository from "../repository/FotoRepository";
 
 class FotoController {
 
   public async get(req: Request, res: Response) {
     try {
-      const dbClient = await pool.connect();
-      const userId = req.params.id;
-      const sql = `SELECT "fotoUrl", pricipal
-        FROM public.foto
-        where "usuarioId" = ${userId};`;
-      const { rows } = await dbClient.query(sql);
-      const todos = rows;
-
-      dbClient.release();
-
+      const userId = parseInt(req.params.id);
+      const todos = FotoRepository.getByUsuarioId(userId);      
       res.send({data: todos}).status(200);
     } catch (error) {
       res.status(500).send(error);

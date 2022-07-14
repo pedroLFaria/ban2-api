@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import UsuarioController from "../controllers/UsuarioController";
 import pool from "../db/dbconnector";
 import Genero from "../enums/genero";
+import PreferenciaDto from "../models/PreferenciaDto";
+import PreferenciaRepository from "../repository/PreferenciaRepository";
 
 class PreferenciaController{
 
@@ -10,15 +12,12 @@ class PreferenciaController{
             const dbClient = await pool.connect();
             const userId = req.params.id;
             const body = req.body;
-            const sql = `UPDATE public.preferencia
-            SET "preferenciaIdadeMinima"=${body.preferenciaIdadeMinima}, 
-                "preferenciaIdadeMaxima"=${body.preferenciaIdadeMaxima}, 
-                "generoId"=${Genero[body.preferenciaGenero]}
-            WHERE 
-                "usuarioId" = ${userId};`;
-    
-            await dbClient.query(sql);
-            
+            const dto: PreferenciaDto = {
+                preferenciaIdadeMaxima: body.preferenciaIdadeMaxima,
+                preferenciaIdadeMinima: body.preferenciaIdadeMinima,
+                preferenciaGenero: body.preferenciaGenero,
+            };
+            await PreferenciaRepository.update(dto, parseInt(userId));
             const { rows } = await dbClient.query(UsuarioController.getSql + userId);
             const todos = rows[0];
       
