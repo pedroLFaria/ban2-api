@@ -1,4 +1,4 @@
-import { FotoEntity } from "../entitys/FotoEntity";
+import FotoEntity from "../entitys/FotoEntity";
 import BaseRepository from "./BaseRepository";
 
 export default class FotoRepository extends BaseRepository {
@@ -9,12 +9,12 @@ export default class FotoRepository extends BaseRepository {
             pricipal
             FROM public.foto
             where "usuarioId" = ${usuarioId};`;
-        return await this.fetch<any[]>(sql);
+        return await this.fetch<any>(sql);
     }
 
     public static async getAll() {
         const sql = `SELECT * 
             FROM public.foto;`
-        return await this.fetch<any[]>(sql);
+        return await this.fetch<FotoEntity>(sql);
     }
 }

@@ -1,8 +1,8 @@
-interface UsuarioEntity {
+export default interface UsuarioEntity {
     usuarioId: number;
     usuarioNome: string;
     usuarioSenha: string;
     usuarioEmail: string;
-    genero: GeneroEntity;
+    generoId: number;
     usuarioDataDeNascimento: Date;
 }

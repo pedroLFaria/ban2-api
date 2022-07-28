@@ -14,7 +14,7 @@ class CurtidaController {
 
   public async getMatches(req: Request, res: Response) {    
     const userId = parseInt(req.params.id);
-    const curtidas = curtidaRepository.getMatches(userId);
+    const curtidas = await curtidaRepository.getMatches(userId);
     res.send({ data: curtidas }).status(200);
   }
 

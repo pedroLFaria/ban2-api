@@ -1,6 +1,4 @@
-import pool from "../db/dbconnector";
-import CurtidaEntity from "../entitys/curtidaEntity";
-import curtidaDto from "../models/CurtidaDto";
+import CurtidaEntity from "../entitys/CurtidaEntity";
 import BaseRepository from "./BaseRepository";
 
 
@@ -25,13 +23,13 @@ export default class curtidaRepository extends BaseRepository {
             SELECT c."usuarioAlvoId"
                 FROM public.curtida c
                 where c."usuarioId" = ${userId} and c."isCurtida"=true);`;
-        return await this.fetch<CurtidaEntity[]>(sql);
+        return await this.fetch<CurtidaEntity>(sql);
     }
 
     public static async getAll(){
         const sql =  `SELECT * 
                         FROM public.curtida;`
-        return await this.fetch<CurtidaEntity[]>(sql);
+        return await this.fetch<CurtidaEntity>(sql);
     }
 
     public static async delete(userId: number){
