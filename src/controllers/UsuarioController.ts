@@ -82,9 +82,9 @@ class UsuarioController {
                 u."usuarioId" != p."usuarioId"
         join public.genero g on g."generoId" = u."generoId"
         where p."usuarioId" = ${userId} and u."usuarioId" not in (select "usuarioAlvoId" from public.curtida where "usuarioId" = ${userId});`;
+      
       const { rows } = await dbClient.query(sql);
       const todos = rows;
-
       dbClient.release();
 
       res.send({data: todos}).status(200);

@@ -49,7 +49,7 @@ class Server {
     }
 
     private scriptInicial(){
-        const db = firestore().collection('foo').doc('bas').set({
+        const db = firestore().collection('foo').doc('ble').set({
             name: 'ada',
             email: 'fdsa'
         })

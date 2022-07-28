@@ -7,7 +7,7 @@ class FotoController {
   public async get(req: Request, res: Response) {
     try {
       const userId = parseInt(req.params.id);
-      const todos = FotoRepository.getByUsuarioId(userId);      
+      const todos = await FotoRepository.getByUsuarioId(userId);
       res.send({data: todos}).status(200);
     } catch (error) {
       res.status(500).send(error);

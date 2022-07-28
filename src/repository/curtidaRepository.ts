@@ -6,14 +6,14 @@ import BaseRepository from "./BaseRepository";
 
 export default class curtidaRepository extends BaseRepository {
 
-    public static async insert(dto: curtidaDto) {
+    public static async insert(dto: CurtidaEntity) {
         const sql = `INSERT INTO public.curtida(
             "usuarioId", "usuarioAlvoId", "isCurtida", "curtidaData")
-            VALUES (${dto.id}, ${dto.alvoId}, ${dto.isCurtida}, now()) 
+            VALUES (${dto.usuarioId}, ${dto.usuarioAlvoId}, ${dto.isCurtida}, now()) 
             ON CONFLICT ("usuarioId", "usuarioAlvoId") DO UPDATE
             SET "isCurtida"=${dto.isCurtida},
             "curtidaData"= now();`;
-        this.edit(sql);
+        await this.edit(sql);
     }
 
     public static async getMatches(userId: number) {
@@ -25,13 +25,13 @@ export default class curtidaRepository extends BaseRepository {
             SELECT c."usuarioAlvoId"
                 FROM public.curtida c
                 where c."usuarioId" = ${userId} and c."isCurtida"=true);`;
-        return this.fetch<CurtidaEntity[]>(sql);
+        return await this.fetch<CurtidaEntity[]>(sql);
     }
 
     public static async getAll(){
         const sql =  `SELECT * 
                         FROM public.curtida;`
-        return this.fetch<CurtidaEntity[]>(sql);
+        return await this.fetch<CurtidaEntity[]>(sql);
     }
 
     public static async delete(userId: number){
